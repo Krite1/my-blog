@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog SEO Otomatis</title>
+  <meta name="description" content="Blog SEO otomatis dengan Tailwind dan auto-update postingan.">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#faf7f2] text-gray-900">
+  <header class="bg-white shadow p-4 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-800">MySEO Blog</h1>
+    <nav class="flex gap-4 text-sm font-medium">
+      <a href="#" class="hover:text-blue-600">Home</a>
+      <a href="#" class="hover:text-blue-600">Kategori</a>
+      <a href="#" class="hover:text-blue-600">Tentang</a>
+    </nav>
+  </header>
+  <main class="max-w-6xl mx-auto p-6 grid md:grid-cols-3 gap-6 mt-6">
+    <section class="md:col-span-2">
+      <h2 class="text-xl font-semibold mb-4">Posting Terbaru</h2>
+      <div id="posts-container" class="grid md:grid-cols-2 gap-6"></div>
+    </section>
+    <aside class="bg-white rounded-xl p-4 shadow-md h-fit">
+      <h3 class="text-lg font-semibold mb-3">🔥 Trending</h3>
+      <ul id="trending-list" class="space-y-2"></ul>
+    </aside>
+  </main>
+  <footer class="text-center text-sm text-gray-500 py-6">
+    © 2025 MySEO Blog — Dibangun dengan Tailwind + Vercel
+  </footer>
+  <script>
+    async function loadPosts() {
+      const res = await fetch("posts.json");
+      const posts = await res.json();
+      const container = document.getElementById("posts-container");
+      container.innerHTML = posts.map(p => `
+        <a href="posts/${p.id}.html" class="bg-white rounded-xl overflow-hidden shadow hover:shadow-lg transition block">
+          <img src="${p.image}" alt="${p.title}" class="w-full h-48 object-cover">
+          <div class="p-4">
+            <span class="text-sm text-blue-600 font-medium">${p.category}</span>
+            <h3 class="font-semibold mt-1">${p.title}</h3>
+            <p class="text-sm text-gray-600 mt-1">${p.excerpt}</p>
+            <span class="text-xs text-gray-400 block mt-2">${p.date}</span>
+          </div>
+        </a>
+      `).join("");
+      const trending = document.getElementById("trending-list");
+      trending.innerHTML = posts.slice(0, 3).map(p => `
+        <li><a href="posts/${p.id}.html" class="text-blue-700 hover:underline">${p.title}</a></li>
+      `).join("");
+    }
+    loadPosts();
+  </script>
+</body>
+</html>
